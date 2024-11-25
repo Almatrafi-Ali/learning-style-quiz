@@ -1,60 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="rtl" lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Learning Styles Inventory</title>
+    <title>اختبار أنماط التعلم الشخصية</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
-        .question { margin-bottom: 20px; }
-        .result { margin-top: 30px; font-weight: bold; }
-        label { display: block; margin: 5px 0; }
-        button { margin-top: 20px; padding: 10px 15px; font-size: 16px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            text-align: center;
+            direction: rtl;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        h1, h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+        }
+        .btn {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
-    <h1>Personal Learning Styles Inventory</h1>
-    <form id="quizForm">
-        <!-- Questions Start -->
-        <div class="question">
-            <p>1. عند حل مشكلة، كيف تفضل التصرف؟</p>
-            <label><input type="radio" name="q1" value="Doer"> اتخاذ إجراء فوري</label>
-            <label><input type="radio" name="q1" value="Observer"> اتباع نهج خطوة بخطوة</label>
-            <label><input type="radio" name="q1" value="Feeler"> التفكير في التأثير على الآخرين</label>
-            <label><input type="radio" name="q1" value="Thinker"> التأكد من وجود جميع الحقائق</label>
+    <div class="container" id="app">
+        <div id="start">
+            <h1>اختبار أنماط التعلم الشخصية</h1>
+            <p>مرحبًا بك في اختبار أنماط التعلم. ستظهر لك سلسلة من الأسئلة. اختر الإجابة الأقرب إلى شخصيتك.</p>
+            <button class="btn" onclick="startTest()">ابدأ الاختبار</button>
         </div>
-        <div class="question">
-            <p>2. كمُتعلم، تفضل:</p>
-            <label><input type="radio" name="q2" value="Observer"> الاستماع إلى محاضرة</label>
-            <label><input type="radio" name="q2" value="Feeler"> العمل في مجموعات صغيرة</label>
-            <label><input type="radio" name="q2" value="Thinker"> قراءة المقالات ودراسات الحالة</label>
-            <label><input type="radio" name="q2" value="Doer"> المشاركة في تمثيل أدوار</label>
+
+        <div id="question" style="display: none;">
+            <h2 id="question-text"></h2>
+            <div class="options">
+                <button class="btn" onclick="saveAnswer('a')">الخيار أ</button>
+                <button class="btn" onclick="saveAnswer('b')">الخيار ب</button>
+                <button class="btn" onclick="saveAnswer('c')">الخيار ج</button>
+                <button class="btn" onclick="saveAnswer('d')">الخيار د</button>
+            </div>
         </div>
-        <div class="question">
-            <p>3. عندما يسأل المدرب سؤالاً تعرف إجابته، تفضل:</p>
-            <label><input type="radio" name="q3" value="Feeler"> التفكير في ما إذا كانت إجابتك ستلقى استحساناً</label>
-            <label><input type="radio" name="q3" value="Observer"> ترك الآخرين يجيبون أولاً</label>
-            <label><input type="radio" name="q3" value="Thinker"> التفكير جيداً في إجابتك قبل الرد</label>
-            <label><input type="radio" name="q3" value="Doer"> تقديم إجابتك فوراً</label>
+
+        <div id="result" style="display: none;">
+            <h1>نتيجتك</h1>
+            <p id="result-text"></p>
+            <button class="btn" onclick="restartTest()">أعد الاختبار</button>
         </div>
-        <!-- Add remaining questions similarly -->
-        <!-- Questions End -->
-        <button type="button" onclick="calculateResult()">عرض النتيجة</button>
-    </form>
-    <div id="result" class="result"></div>
+    </div>
 
     <script>
-        function calculateResult() {
-            const form = document.getElementById('quizForm');
-            const answers = new FormData(form);
-            const scores = { Doer: 0, Observer: 0, Feeler: 0, Thinker: 0 };
-
-            for (const [key, value] of answers.entries()) {
-                scores[value]++;
+        const questions = [
+            {
+                text: "عندما أواجه مشكلة، أُفضل أن:",
+                options: ["أحلها خطوة بخطوة", "أتصرف مباشرة", "أفكر في تأثيرها على الآخرين", "أجمع كل الحقائق أولاً"]
+            },
+            {
+                text: "أفضل طريقة للتعلم بالنسبة لي هي:",
+                options: ["الاستماع إلى محاضرة", "المشاركة في مجموعات صغيرة", "قراءة مقالات", "تطبيق التجارب"]
+            },
+            {
+                text: "عندما يطلب مني المدرب الإجابة على سؤال، فإنني:",
+                options: ["أدع الآخرين يجيبون أولاً", "أجيب مباشرة", "أفكر في كيفية استقبال الآخرين لإجابتي", "أفكر ملياً قبل الإجابة"]
             }
+        ];
 
-            const highest = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-            document.getElementById('result').innerText = `Your learning style is: ${highest}`;
+        let currentQuestion = 0;
+        let answers = [];
+
+        function startTest() {
+            document.getElementById('start').style.display = 'none';
+            document.getElementById('question').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question-text').innerText = question.text;
+            const buttons = document.querySelectorAll('.options .btn');
+            buttons.forEach((button, index) => {
+                button.innerText = question.options[index];
+            });
+        }
+
+        function saveAnswer(answer) {
+            answers.push(answer);
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('question').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            let feeler = 0, thinker = 0, doer = 0, observer = 0;
+            answers.forEach(answer => {
+                if (answer === 'a') observer++;
+                if (answer === 'b') doer++;
+                if (answer === 'c') feeler++;
+                if (answer === 'd') thinker++;
+            });
+
+            let result = "النمط الأكثر تطابقًا هو: ";
+            if (feeler > thinker && feeler > doer && feeler > observer) result += "الشعوري";
+            else if (thinker > feeler && thinker > doer && thinker > observer) result += "المفكر";
+            else if (doer > feeler && doer > thinker && doer > observer) result += "المنفذ";
+            else result += "المراقب";
+
+            document.getElementById('result-text').innerText = result;
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            answers = [];
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('start').style.display = 'block';
         }
     </script>
 </body>

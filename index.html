@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Styles Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        .question { margin-bottom: 20px; }
+        .result { margin-top: 30px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Personal Learning Styles Inventory</h1>
+    <form id="quizForm">
+        <div class="question">
+            <p>1. عند حل مشكلة، كيف تفضل التصرف؟</p>
+            <label><input type="radio" name="q1" value="Doer"> اتخاذ إجراء فوري</label><br>
+            <label><input type="radio" name="q1" value="Observer"> اتباع نهج خطوة بخطوة</label><br>
+            <label><input type="radio" name="q1" value="Feeler"> التفكير في التأثير على الآخرين</label><br>
+            <label><input type="radio" name="q1" value="Thinker"> التأكد من وجود جميع الحقائق</label>
+        </div>
+        <!-- Repeat similar blocks for other questions -->
+        <button type="button" onclick="calculateResult()">عرض النتيجة</button>
+    </form>
+    <div id="result" class="result"></div>
+
+    <script>
+        function calculateResult() {
+            const form = document.getElementById('quizForm');
+            const answers = new FormData(form);
+            const scores = { Doer: 0, Observer: 0, Feeler: 0, Thinker: 0 };
+            
+            for (const [key, value] of answers.entries()) {
+                scores[value]++;
+            }
+
+            const highest = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            document.getElementById('result').innerText = `Your learning style is: ${highest}`;
+        }
+    </script>
+</body>
+</html>

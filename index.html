@@ -3,24 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learning Styles Quiz</title>
+    <title>Personal Learning Styles Inventory</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
         .question { margin-bottom: 20px; }
         .result { margin-top: 30px; font-weight: bold; }
+        label { display: block; margin: 5px 0; }
+        button { margin-top: 20px; padding: 10px 15px; font-size: 16px; }
     </style>
 </head>
 <body>
     <h1>Personal Learning Styles Inventory</h1>
     <form id="quizForm">
+        <!-- Questions Start -->
         <div class="question">
             <p>1. عند حل مشكلة، كيف تفضل التصرف؟</p>
-            <label><input type="radio" name="q1" value="Doer"> اتخاذ إجراء فوري</label><br>
-            <label><input type="radio" name="q1" value="Observer"> اتباع نهج خطوة بخطوة</label><br>
-            <label><input type="radio" name="q1" value="Feeler"> التفكير في التأثير على الآخرين</label><br>
+            <label><input type="radio" name="q1" value="Doer"> اتخاذ إجراء فوري</label>
+            <label><input type="radio" name="q1" value="Observer"> اتباع نهج خطوة بخطوة</label>
+            <label><input type="radio" name="q1" value="Feeler"> التفكير في التأثير على الآخرين</label>
             <label><input type="radio" name="q1" value="Thinker"> التأكد من وجود جميع الحقائق</label>
         </div>
-        <!-- Repeat similar blocks for other questions -->
+        <div class="question">
+            <p>2. كمُتعلم، تفضل:</p>
+            <label><input type="radio" name="q2" value="Observer"> الاستماع إلى محاضرة</label>
+            <label><input type="radio" name="q2" value="Feeler"> العمل في مجموعات صغيرة</label>
+            <label><input type="radio" name="q2" value="Thinker"> قراءة المقالات ودراسات الحالة</label>
+            <label><input type="radio" name="q2" value="Doer"> المشاركة في تمثيل أدوار</label>
+        </div>
+        <div class="question">
+            <p>3. عندما يسأل المدرب سؤالاً تعرف إجابته، تفضل:</p>
+            <label><input type="radio" name="q3" value="Feeler"> التفكير في ما إذا كانت إجابتك ستلقى استحساناً</label>
+            <label><input type="radio" name="q3" value="Observer"> ترك الآخرين يجيبون أولاً</label>
+            <label><input type="radio" name="q3" value="Thinker"> التفكير جيداً في إجابتك قبل الرد</label>
+            <label><input type="radio" name="q3" value="Doer"> تقديم إجابتك فوراً</label>
+        </div>
+        <!-- Add remaining questions similarly -->
+        <!-- Questions End -->
         <button type="button" onclick="calculateResult()">عرض النتيجة</button>
     </form>
     <div id="result" class="result"></div>
@@ -30,7 +48,7 @@
             const form = document.getElementById('quizForm');
             const answers = new FormData(form);
             const scores = { Doer: 0, Observer: 0, Feeler: 0, Thinker: 0 };
-            
+
             for (const [key, value] of answers.entries()) {
                 scores[value]++;
             }
